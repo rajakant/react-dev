@@ -1,7 +1,5 @@
-```markdown
-# react-dev
-
-## Episode 1
+````markdown
+# Episode 1
 
 In this episode, we will explore the basics of React, starting with the React CDN library. We'll discuss how to use React without any build tools, by simply including the React and ReactDOM libraries directly from a CDN in your HTML file.
 
@@ -10,9 +8,16 @@ In this episode, we will explore the basics of React, starting with the React CD
 To use React via a CDN, you can include the following scripts in your HTML file:
 
 ```html
-<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script
+  src="https://unpkg.com/react@18/umd/react.development.js"
+  crossorigin
+></script>
+<script
+  src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+  crossorigin
+></script>
 ```
+````
 
 These scripts provide the `React` and `ReactDOM` libraries, allowing you to build React components directly in the browser.
 
@@ -24,9 +29,9 @@ The `React.createElement` method is a fundamental building block of React. It is
 
 ```javascript
 const element = React.createElement(
-  'h1',
-  { className: 'greeting' },
-  'Hello, world!'
+  "h1",
+  { className: "greeting" },
+  "Hello, world!"
 );
 ```
 
@@ -39,8 +44,8 @@ In this example, `React.createElement` is used to create an `h1` element with a 
 #### Example:
 
 ```javascript
-const element = React.createElement('h1', null, 'Hello, world!');
-const root = document.getElementById('root');
+const element = React.createElement("h1", null, "Hello, world!");
+const root = document.getElementById("root");
 ReactDOM.render(element, root);
 ```
 
@@ -57,9 +62,6 @@ const element = <h1 className="greeting">Hello, world!</h1>;
 ```
 
 Under the hood, JSX is transformed into `React.createElement` calls, so this JSX code is equivalent to the earlier example. However, JSX makes it much easier to visualize the structure of your components.
-
-
-
 
 # episode-2 - Igniting our APP
 
@@ -166,8 +168,118 @@ The `browserslist` configuration in `package.json` determines which browsers you
 ```
 
 This ensures that Parcel generates code that is compatible with the specified browsers.
+
+# Episode-3 - Laying the Foundation
+
+## Part 1
+
+### 1. Start and Build Scripts in `package.json`
+
+In this part, we create and explain the `start` and `build` scripts in the `package.json` file. These scripts help streamline the development and production processes.
+
+- **Start Script**: The `start` script is used during development to launch a local server and start the project with Parcel. It watches for changes in your files and automatically reloads the browser.
+
+  ```json
+  "scripts": {
+    "start": "parcel index.html",
+  }
+  ```
+
+- **Build Script**: The `build` script is used to create an optimized production build. It bundles, minifies, and outputs the files in the `dist` folder, ready for deployment.
+
+  ```json
+  "scripts": {
+    "build": "parcel build index.html",
+  }
+  ```
+
+## Part 2
+
+### 1. Understanding JSX
+
+JSX (JavaScript XML) is a syntax extension for JavaScript that allows you to write HTML-like code within your JavaScript files. JSX makes it easier to visualize the structure of your UI components, and it feels more intuitive compared to writing `React.createElement` directly.
+
+### 2. JSX is Not HTML
+
+Although JSX looks like HTML, it is not HTML. JSX is a syntax that is similar to HTML or XML, but it is written within JavaScript. Under the hood, JSX is converted into JavaScript objects that represent DOM elements.
+
+### 3. Babel and JSX
+
+Babel is a JavaScript compiler that is used to transpile JSX into plain JavaScript. Since browsers do not natively understand JSX, Babel is necessary to convert it into JavaScript that the browser can interpret. Parcel automatically installs Babel when you use JSX, so you don't need to worry about setting it up manually.
+
+### 4. How JSX is Transpiled
+
+When Babel transpiles JSX, it converts the JSX code into `React.createElement` calls. For example, the following JSX:
+
+```jsx
+const element = <h1 className="title">Hello, world!</h1>;
 ```
-    
 
+Is transpiled into:
 
+```javascript
+const element = React.createElement(
+  "h1",
+  { className: "title" },
+  "Hello, world!"
+);
+```
 
+### 5. JSX Attributes are CamelCase
+
+In JSX, attributes are written in camelCase, unlike HTML, where attributes are typically lowercase. For example, the `class` attribute in HTML becomes `className` in JSX.
+
+### 6. Wrapping JSX in Parentheses
+
+If your JSX code spans multiple lines, it's best practice to wrap it in parentheses. This helps prevent any potential issues with automatic semicolon insertion in JavaScript.
+
+```jsx
+const element = (
+  <div>
+    <h1>Hello, world!</h1>
+    <p>Welcome to React.</p>
+  </div>
+);
+```
+
+## Part 3
+
+### 1. React Components
+
+React components are the building blocks of a React application. Components can be classified into two main types:
+
+- **Class-based Components**: The older way of defining components, using ES6 classes.
+- **Functional Components**: The modern way of defining components, using plain JavaScript functions.
+
+### 2. Class-based vs. Functional Components
+
+- **Class-based Components**: This is the traditional way of creating components, using the `class` keyword and extending `React.Component`. They are more complex and require handling `this` and lifecycle methods.
+
+- **Functional Components**: The newer, preferred way of creating components using functions. Functional components are simpler, and with the introduction of React Hooks, they can now manage state and side effects, making class-based components largely unnecessary.
+
+### 3. Component Composition
+
+Component composition refers to the practice of building complex UIs by combining simpler components. React allows you to compose components together, passing data from parent to child components through props.
+
+#### Example:
+
+```jsx
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+
+function App() {
+  return (
+    <div>
+      <Welcome name="Alice" />
+      <Welcome name="Bob" />
+    </div>
+  );
+}
+```
+
+In this example, the `App` component is composed of two `Welcome` components, each receiving different props.
+
+### 4. JSX and Cross-Site Scripting (XSS) Protection
+
+React automatically protects against cross-site scripting (XSS) attacks by escaping any values embedded in JSX before rendering them. This ensures that even if a value contains malicious code, it will be rendered as plain text rather than executable code. React's sanitization process makes it safe to insert dynamic content into your components.
