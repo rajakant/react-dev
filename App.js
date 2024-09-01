@@ -3,17 +3,65 @@ import ReactDOM from "react-dom/client";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const Title = () => <h1>This is the title!</h1>;
+const HeaderComponent = () => {
+  return (
+    <header className="header">
+      <div className="logo-container">
+        <img
+          className="logo"
+          src="https://bcassetcdn.com/public/blog/wp-content/uploads/2019/05/18095855/cooking.png"
+        />
+      </div>
+      <div className="nav-items">
+        <ul>
+          <li>Home</li>
+          <li>About</li>
+          <li>Contact</li>
+          <li>Cart</li>
+        </ul>
+      </div>
+    </header>
+  );
+};
 
-const titleAsElement = <h2>this title element</h2>;
+const RestaurantCard = () => {
+  return (
+    <div className="res-card">
+      <img
+        className="res-img"
+        src="https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      />
+      <h3> Res Name</h3>
+      <h4>Cuisine details</h4>
+      <h4>4.2 star</h4>
+    </div>
+  );
+};
 
-// React Functional Component
-const HeadingComponent = () => (
-  <div>
-    <Title />
-    {titleAsElement}
-    <h1 id="heading">Hello, React From component!</h1>
-  </div>
-);
+const BodyComponent = () => {
+  return (
+    <div className="body">
+      <div className="search">Search</div>
+      <div className="res-container">
+        <RestaurantCard />
+        <RestaurantCard />
+        <RestaurantCard />
+        <RestaurantCard />
+        <RestaurantCard />
+        <RestaurantCard />
+        <RestaurantCard />
+      </div>
+    </div>
+  );
+};
 
-root.render(<HeadingComponent />);
+const Applayout = () => {
+  return (
+    <div className="app">
+      <HeaderComponent />
+      <BodyComponent />
+    </div>
+  );
+};
+
+root.render(<Applayout />);

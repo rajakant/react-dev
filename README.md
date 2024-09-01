@@ -1,5 +1,8 @@
-````markdown
-# Episode 1
+```markdown
+
+```
+
+# Episode-1
 
 In this episode, we will explore the basics of React, starting with the React CDN library. We'll discuss how to use React without any build tools, by simply including the React and ReactDOM libraries directly from a CDN in your HTML file.
 
@@ -17,7 +20,6 @@ To use React via a CDN, you can include the following scripts in your HTML file:
   crossorigin
 ></script>
 ```
-````
 
 These scripts provide the `React` and `ReactDOM` libraries, allowing you to build React components directly in the browser.
 
@@ -63,7 +65,7 @@ const element = <h1 className="greeting">Hello, world!</h1>;
 
 Under the hood, JSX is transformed into `React.createElement` calls, so this JSX code is equivalent to the earlier example. However, JSX makes it much easier to visualize the structure of your components.
 
-# episode-2 - Igniting our APP
+# Episode-2 - Igniting our APP
 
 ## Part 1
 
@@ -283,3 +285,114 @@ In this example, the `App` component is composed of two `Welcome` components, ea
 ### 4. JSX and Cross-Site Scripting (XSS) Protection
 
 React automatically protects against cross-site scripting (XSS) attacks by escaping any values embedded in JSX before rendering them. This ensures that even if a value contains malicious code, it will be rendered as plain text rather than executable code. React's sanitization process makes it safe to insert dynamic content into your components.
+
+Here's a detailed `.md` file based on the provided details for Episode 4 titled "Show Me the Code":
+
+# Episode 4 - Show Me the Code
+
+## Part 1
+
+### 1. How to Put Inline Style in React
+
+In React, you can apply inline styles directly to elements using a `style` attribute, but unlike HTML, the styles must be provided as an object. Each CSS property is written in camelCase instead of kebab-case, and values are provided as strings or numbers.
+
+#### Example:
+
+```jsx
+const divStyle = {
+  color: "blue",
+  backgroundColor: "lightgray",
+  padding: "10px",
+  borderRadius: "5px",
+};
+
+function StyledComponent() {
+  return (
+    <div style={divStyle}>
+      This is a styled div using inline styles in React!
+    </div>
+  );
+}
+```
+
+In this example, the `divStyle` object contains CSS properties, and the `style` attribute is used to apply these styles to the `div`. Note that camelCase is used for multi-word properties like `backgroundColor`.
+
+### 2. Props in React
+
+Props (short for "properties") are a way to pass data from parent components to child components in React. They are similar to function arguments and can be used to customize a component's appearance or behavior. Props are immutable, meaning they cannot be modified by the receiving component.
+
+#### Example:
+
+```jsx
+function Greeting(props) {
+  return <h1>Hello, {props.name}!</h1>;
+}
+
+function App() {
+  return <Greeting name="Alice" />;
+}
+```
+
+In this example, the `Greeting` component receives a `name` prop and uses it to display a personalized greeting. The `App` component passes the `name` prop with the value "Alice" to `Greeting`.
+
+### 3. Props Destructuring
+
+Props destructuring is a convenient way to extract specific properties from the `props` object, making the code cleaner and more readable. Instead of accessing each prop through `props.propName`, you can directly destructure the needed properties in the function signature.
+
+#### Example:
+
+```jsx
+function Greeting({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+
+function App() {
+  return <Greeting name="Bob" />;
+}
+```
+
+In this example, the `Greeting` component destructures the `name` prop directly in its parameter list. This approach is especially useful when a component has multiple props, reducing the need to repeatedly reference `props`.
+
+### 4. The Use of Key in Component Lists
+
+When rendering a list of components in React, each component should have a unique `key` prop. The `key` helps React identify which items have changed, been added, or removed, optimizing the rendering process. Keys should be unique among sibling elements.
+
+#### Example:
+
+```jsx
+function ItemList({ items }) {
+  return (
+    <ul>
+      {items.map((item) => (
+        <li key={item.id}>{item.name}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+In this example, each `li` element is assigned a unique `key` based on the `item.id`. This helps React efficiently update the list when items change.
+
+### 5. Why React Recommends Not Using Index as Key
+
+React advises against using the array index as the `key` when rendering lists because it can lead to issues with component identity. If the list order changes, or if items are added or removed, using the index can cause unexpected behavior, such as losing component state.
+
+#### Example of a Potential Issue:
+
+```jsx
+function ItemList({ items }) {
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li key={index}>{item.name}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+In this example, if items are reordered or new items are inserted, React might incorrectly associate the wrong `li` elements with the wrong items because the `key` is based on the index, which can change. This can lead to subtle bugs, especially when components rely on their internal state. Using a stable, unique identifier like `item.id` is preferred.
+
+---
+
+This concludes Episode 4, Part 1, where we've covered essential React concepts, including inline styles, props, props destructuring, and the importance of keys in component lists. Understanding these fundamentals will help you build more efficient and maintainable React applications.
