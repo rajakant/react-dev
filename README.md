@@ -1,7 +1,4 @@
-```markdown
-
-```
-
+````markdown
 # Episode-1
 
 In this episode, we will explore the basics of React, starting with the React CDN library. We'll discuss how to use React without any build tools, by simply including the React and ReactDOM libraries directly from a CDN in your HTML file.
@@ -20,6 +17,7 @@ To use React via a CDN, you can include the following scripts in your HTML file:
   crossorigin
 ></script>
 ```
+````
 
 These scripts provide the `React` and `ReactDOM` libraries, allowing you to build React components directly in the browser.
 
@@ -290,8 +288,6 @@ Here's a detailed `.md` file based on the provided details for Episode 4 titled 
 
 # Episode 4 - Show Me the Code
 
-## Part 1
-
 ### 1. How to Put Inline Style in React
 
 In React, you can apply inline styles directly to elements using a `style` attribute, but unlike HTML, the styles must be provided as an object. Each CSS property is written in camelCase instead of kebab-case, and values are provided as strings or numbers.
@@ -396,3 +392,113 @@ In this example, if items are reordered or new items are inserted, React might i
 ---
 
 This concludes Episode 4, Part 1, where we've covered essential React concepts, including inline styles, props, props destructuring, and the importance of keys in component lists. Understanding these fundamentals will help you build more efficient and maintainable React applications.
+
+# Episode 5 - Let's Hooked Up
+
+## 1. File Structure in a React App
+
+A typical React application follows a well-organized file structure that promotes modularity and scalability. While there is no single "correct" way to structure a React app, a common approach includes the following:
+
+- **`src/`**: The main source folder containing all the application code.
+  - **`components/`**: A directory for reusable UI components.
+  - **`pages/`**: Contains the main page components, often associated with routes.
+  - **`assets/`**: Stores static assets like images, fonts, and styles.
+  - **`hooks/`**: Custom React hooks are usually placed here.
+  - **`context/`**: Houses React context files for global state management.
+  - **`utils/`**: Utility functions and helpers are stored here.
+  - **`App.js`**: The root component of the application.
+  - **`index.js`**: The entry point where the React app is rendered into the DOM.
+
+This structure helps maintain a clean and manageable codebase, making it easier to navigate and scale as the application grows.
+
+## 2. Export and Import in React
+
+React components, functions, and variables can be shared across different files using the `export` and `import` statements. There are two main types of exports: **default export** and **named export**.
+
+- **Default Export**: Each file can have one default export. When importing, you can give it any name.
+
+  #### Example:
+
+  ```javascript
+  // MyComponent.js
+  export default function MyComponent() {
+    return <div>Hello, World!</div>;
+  }
+
+  // AnotherFile.js
+  import MyComponent from "./MyComponent";
+  ```
+
+- **Named Export**: You can have multiple named exports in a file. When importing, you must use the exact name inside curly braces.
+
+  #### Example:
+
+  ```javascript
+  // utils.js
+  export function add(a, b) {
+    return a + b;
+  }
+
+  export function subtract(a, b) {
+    return a - b;
+  }
+
+  // AnotherFile.js
+  import { add, subtract } from "./utils";
+  ```
+
+Using `export default` is handy when a module primarily exports a single function or class, while named exports are useful for exporting multiple utilities from the same module.
+
+## 3. React Hooks
+
+React Hooks are special functions that allow you to "hook into" React features such as state and lifecycle methods in functional components. Introduced in React 16.8, hooks enable developers to use state and other React features without writing a class component.
+
+#### Common React Hooks:
+
+- **`useState`**: For managing state within functional components.
+- **`useEffect`**: For performing side effects, such as data fetching or updating the DOM.
+- **`useContext`**: For accessing context values in functional components.
+- **`useReducer`**: An alternative to `useState` for managing more complex state logic.
+
+React Hooks promote cleaner and more concise code, making it easier to share logic between components.
+
+## 4. `useState` Hook
+
+The `useState` hook is used to add state to functional components. It returns an array with two elements: the current state value and a function to update that state.
+
+#### Example:
+
+```javascript
+import React, { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
+    </div>
+  );
+}
+```
+
+In this example, `useState(0)` initializes a state variable `count` with a value of `0`. The `setCount` function is used to update the state when the button is clicked.
+
+## 5. Reconciliation Algorithm in React (React Fiber)
+
+React Fiber is the reconciliation algorithm used by React to update the DOM efficiently. It breaks the rendering work into units of work, allowing React to pause and resume rendering as needed. This makes React's rendering process more flexible and enables smoother updates, especially for complex applications.
+
+Fiber improves React's ability to manage priority updates, enabling tasks like animations and user interactions to be handled smoothly without blocking other updates. It also allows React to abort or adjust updates when necessary, optimizing the overall performance of the application.
+
+## 6. Virtual DOM
+
+The Virtual DOM is a lightweight copy of the actual DOM. React uses the Virtual DOM to optimize UI rendering by updating only the parts of the DOM that have changed. Instead of directly manipulating the DOM, React first makes changes to the Virtual DOM and then efficiently updates the actual DOM based on these changes.
+
+This process of using a Virtual DOM minimizes expensive DOM operations, leading to better performance, especially in large applications with frequent updates.
+
+## 7. Diffing Algorithm
+
+The diffing algorithm is a core part of React's reconciliation process. When the state of a component changes, React creates a new Virtual DOM tree. The diffing algorithm then compares this new tree with the previous one to identify what has changed.
+
+React's diffing algorithm works under the assumption that components with the same key are of the same type. It only updates the parts of the DOM that differ between the two trees. This efficient comparison process ensures that React can update the UI quickly and smoothly, even with frequent or complex changes.
