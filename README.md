@@ -1,4 +1,3 @@
-````markdown
 # Episode-1
 
 In this episode, we will explore the basics of React, starting with the React CDN library. We'll discuss how to use React without any build tools, by simply including the React and ReactDOM libraries directly from a CDN in your HTML file.
@@ -17,7 +16,6 @@ To use React via a CDN, you can include the following scripts in your HTML file:
   crossorigin
 ></script>
 ```
-````
 
 These scripts provide the `React` and `ReactDOM` libraries, allowing you to build React components directly in the browser.
 
@@ -503,9 +501,6 @@ The diffing algorithm is a core part of React's reconciliation process. When the
 
 React's diffing algorithm works under the assumption that components with the same key are of the same type. It only updates the parts of the DOM that differ between the two trees. This efficient comparison process ensures that React can update the UI quickly and smoothly, even with frequent or complex changes.
 
-Here's a detailed `.md` file for Episode 6:
-
-````markdown
 # Episode 6
 
 ## Part 1
@@ -553,7 +548,6 @@ Here's a detailed `.md` file for Episode 6:
     return <div>Check the console for messages</div>;
   }
   ```
-````
 
 ### 2. Dependency Array in `useEffect`
 
@@ -623,4 +617,166 @@ Here's a detailed `.md` file for Episode 6:
 
   - In this example, the component renders a different greeting message based on whether the `isLoggedIn` prop is `true` or `false`.
 
----
+# Episode 7 - Navigating the React Router
+
+In this episode, we’ll dive into the core concepts of `react-router-dom`, focusing on routing techniques, including children routes and dynamic routing.
+
+## Part 1: React Router Basics
+
+### 1. Understanding `react-router-dom`
+
+`react-router-dom` is the library that enables routing in React applications. It allows us to create single-page applications (SPAs) with dynamic routing, meaning we can change the view without reloading the page.
+
+### 2. `createBrowserRouter`
+
+The `createBrowserRouter` function sets up the routing in your React app. It uses the History API to keep your UI in sync with the URL, enabling seamless client-side navigation.
+
+Example:
+
+```javascript
+import { createBrowserRouter } from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "about",
+        element: <About />,
+      },
+    ],
+  },
+]);
+```
+
+Here, `createBrowserRouter` defines the routes, including a home route (`/`) and a child route for the "About" page.
+
+### 3. `RouterProvider`
+
+`RouterProvider` is the component that makes your router available in your React application. It ties the routes defined in `createBrowserRouter` with the rest of your app.
+
+Example:
+
+```javascript
+import { RouterProvider } from "react-router-dom";
+
+function App() {
+  return <RouterProvider router={router} />;
+}
+```
+
+This setup allows your app to handle routing as specified in the `router` configuration.
+
+### 4. Handling Errors with `errorElement`
+
+The `errorElement` in `createBrowserRouter` helps in handling errors. If a user navigates to a route that doesn't exist, the `errorElement` will render instead of the expected component.
+
+Example:
+
+```javascript
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+    errorElement: <ErrorPage />,
+  },
+]);
+```
+
+In this example, if the user visits a non-existent route, `ErrorPage` will be displayed.
+
+### 5. `useRouteError` Hook
+
+The `useRouteError` hook provides access to the error object thrown during navigation. It’s useful for displaying custom error messages based on what went wrong.
+
+Example:
+
+```javascript
+import { useRouteError } from "react-router-dom";
+
+function ErrorPage() {
+  let error = useRouteError();
+  return <div>Error: {error.statusText || error.message}</div>;
+}
+```
+
+This hook allows you to tailor the error message according to the specific issue encountered.
+
+## Part 2: Advanced Routing Concepts
+
+### 6. Children Routes and the `Outlet` Component
+
+Children routes are nested routes that enable more complex UI structures. They allow a route to render its child routes inside a parent route component using the `Outlet` component.
+
+Example:
+
+```javascript
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
+      },
+    ],
+  },
+]);
+
+function Layout() {
+  return (
+    <div>
+      <h1>My App</h1>
+      <Outlet />
+    </div>
+  );
+}
+```
+
+In this example, the `Layout` component serves as the parent. It renders the `Outlet` component, which acts as a placeholder for the child routes (`Dashboard` and `Settings`). Depending on the URL, the `Outlet` will render the correct child component.
+
+### 7. Dynamic Routing with `useParams`
+
+Dynamic routing allows routes to handle variable segments in the URL, such as IDs. This is achieved using the `useParams` hook.
+
+Example:
+
+```javascript
+const router = createBrowserRouter([
+  {
+    path: "/users/:userId",
+    element: <UserProfile />,
+  },
+]);
+
+function UserProfile() {
+  let { userId } = useParams();
+  return <div>User ID: {userId}</div>;
+}
+```
+
+Here, the route `/users/:userId` can match any URL like `/users/1` or `/users/123`. The `useParams` hook extracts the `userId` parameter from the URL, allowing the `UserProfile` component to display different data based on the user ID.
+
+### 8. The `Link` Component
+
+The `Link` component is used for navigation between routes without causing a page refresh. It’s essential for building a smooth SPA experience.
+
+Example:
+
+```javascript
+<Link to="/dashboard">Go to Dashboard</Link>
+```
+
+This link navigates to the `/dashboard` route, updating the URL and rendering the appropriate component.
+
+### 9. Client-Side vs. Server-Side Routing
+
+- **Client-Side Routing**: Handles navigation within the browser without refreshing the page. React Router implements this by managing the History API.
+- **Server-Side Routing**: Every route change triggers a full page reload, with the server sending a new HTML file for each route.
