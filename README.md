@@ -780,3 +780,184 @@ This link navigates to the `/dashboard` route, updating the URL and rendering th
 
 - **Client-Side Routing**: Handles navigation within the browser without refreshing the page. React Router implements this by managing the History API.
 - **Server-Side Routing**: Every route change triggers a full page reload, with the server sending a new HTML file for each route.
+
+# Episode 8 - Diving into Class-Based Components in React
+
+In this episode, we'll explore class-based components in React, understand how they work, and learn about key concepts like state, lifecycle methods, and unmounting actions.
+
+## 1. Creating a Class-Based Component
+
+In React, class-based components are created using JavaScript classes that extend `React.Component`. These components have access to lifecycle methods and can manage their own internal state.
+
+Example:
+
+```javascript
+import React, { Component } from "react";
+
+class MyComponent extends Component {
+  render() {
+    return <h1>Hello, {this.props.name}!</h1>;
+  }
+}
+
+export default MyComponent;
+```
+
+Here, `MyComponent` is a class-based component that renders a greeting message based on the `name` prop passed to it.
+
+## 2. Why We Write `super(props)` in Class-Based Components
+
+When creating a constructor in a class-based component, we use `super(props)` to pass the `props` from the parent component to the child component. This is necessary because the child class (your component) is extending `React.Component`, and `super` is the function that calls the constructor of the parent class (`React.Component`).
+
+Example:
+
+```javascript
+class MyComponent extends Component {
+  constructor(props) {
+    super(props); // Necessary to access `this.props`
+    this.state = { count: 0 };
+  }
+
+  render() {
+    return <h1>Count: {this.state.count}</h1>;
+  }
+}
+```
+
+Without `super(props)`, you won’t be able to access `this.props` in the constructor.
+
+## 3. Understanding State in Class-Based Components
+
+State is an object that holds data that may change over the component's lifecycle. In class components, state is managed inside the constructor using `this.state`.
+
+Example:
+
+```javascript
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+  }
+
+  increment = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>Count: {this.state.count}</h1>
+        <button onClick={this.increment}>Increment</button>
+      </div>
+    );
+  }
+}
+```
+
+Here, the `count` is stored in the component's state, and `this.setState` is used to update it when the button is clicked.
+
+## 4. React Lifecycle Methods
+
+Class-based components have special methods called **lifecycle methods** that allow developers to run code at specific points in a component’s life.
+
+Key lifecycle phases:
+
+- **Mounting**: Component is created and inserted into the DOM (`constructor`, `render`, `componentDidMount`).
+- **Updating**: Component re-renders due to state or prop changes (`render`, `componentDidUpdate`).
+- **Unmounting**: Component is removed from the DOM (`componentWillUnmount`).
+
+## 5. Why `componentDidMount` is Perfect for API Calls
+
+`componentDidMount` is called once, immediately after a component is inserted into the DOM. This makes it the perfect place for API calls since the component is fully ready to interact with external data.
+
+Example:
+
+```javascript
+class DataFetcher extends Component {
+  state = { data: null };
+
+  componentDidMount() {
+    fetch("https://api.example.com/data")
+      .then((response) => response.json())
+      .then((data) => this.setState({ data }));
+  }
+
+  render() {
+    return <div>{this.state.data ? this.state.data : "Loading..."}</div>;
+  }
+}
+```
+
+In this example, the API call is made inside `componentDidMount`, and once the data is fetched, it updates the component’s state.
+
+## 6. React Render and Commit Phases in Child Components
+
+In React, if a parent component has multiple child components, the render phase of all child components will be completed before moving to the commit phase. During the **render phase**, React calculates what the UI should look like but doesn’t apply changes to the DOM. In the **commit phase**, React applies the changes to the DOM.
+
+Example:
+
+- **Render Phase**: React prepares the components but doesn’t commit them to the DOM.
+- **Commit Phase**: React updates the DOM after rendering all child components.
+
+## 7. Understanding `componentDidUpdate`
+
+`componentDidUpdate` is called after the component’s state or props are updated. It’s commonly used for performing side effects after updates.
+
+Example:
+
+```javascript
+componentDidUpdate(prevProps, prevState) {
+  if (prevState.count !== this.state.count) {
+    console.log('Count updated:', this.state.count);
+  }
+}
+```
+
+Here, we check if the count state has changed and perform an action accordingly.
+
+## 8. `componentWillUnmount` and Cleaning Up
+
+`componentWillUnmount` is invoked just before a component is removed from the DOM. It’s used for cleanup tasks such as invalidating timers, canceling network requests, or cleaning up subscriptions.
+
+Example:
+
+```javascript
+class Timer extends Component {
+  componentDidMount() {
+    this.timerID = setInterval(() => this.tick(), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID); // Cleanup timer when component unmounts
+  }
+
+  render() {
+    return <h1>Timer Running</h1>;
+  }
+}
+```
+
+This ensures that the interval is cleared when the component is unmounted, preventing memory leaks.
+
+## 9. Unmounting Action in Functional Components
+
+In functional components, we use the `useEffect` hook to manage cleanup tasks. The return function inside `useEffect` acts like `componentWillUnmount` in class-based components.
+
+Example:
+
+```javascript
+import { useEffect } from "react";
+
+function Timer() {
+  useEffect(() => {
+    const timerID = setInterval(() => console.log("Timer running"), 1000);
+
+    // Cleanup function
+    return () => {
+      clearInterval(timerID);
+    };
+  }, []);
+
+  return <h1>Timer Running</h1>;
+}
+```
