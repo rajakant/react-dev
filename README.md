@@ -961,3 +961,155 @@ function Timer() {
   return <h1>Timer Running</h1>;
 }
 ```
+
+# Episode 9 - Modular Code with Custom Hooks & Optimization Techniques
+
+In this episode, we’ll cover some essential principles of clean coding and explore advanced techniques like custom hooks, lazy loading, and code splitting in React.
+
+## 1. Single Responsibility Principle
+
+The **Single Responsibility Principle (SRP)** states that a class, function, or component should have one and only one reason to change. In React development, this principle translates to keeping components focused on a single concern. This makes them easier to manage, test, and maintain.
+
+For example, a component that handles user input and displays data should be split into two components—one for input handling and one for displaying the data. This reduces the complexity of each component and makes it easier to maintain.
+
+Benefits of SRP:
+
+- Increased code clarity.
+- Easier debugging and testing.
+- Reusability of individual components.
+
+## 2. Custom Hooks in React
+
+**Custom Hooks** allow you to extract and reuse logic across different components, keeping the code DRY (Don't Repeat Yourself) and modular. A custom hook is simply a function that can use other hooks like `useState`, `useEffect`, etc.
+
+### Example: Custom Hook to Fetch Data
+
+```javascript
+import { useState, useEffect } from "react";
+
+const useFetchData = (url) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const result = await response.json();
+      setData(result);
+      setLoading(false);
+    };
+    fetchData();
+  }, [url]);
+
+  return { data, loading };
+};
+
+export default useFetchData;
+```
+
+In this example, `useFetchData` is a custom hook that handles data fetching. This hook can be reused across multiple components without duplicating logic.
+
+### Benefits of Custom Hooks
+
+- Modular and reusable code.
+- Separation of logic and presentation in components.
+- Easier to test and debug the shared logic.
+
+## 3. Custom Hook to Check User's Online Status
+
+Let’s create a custom hook that checks if the user is online or offline.
+
+### Custom Hook: `useOnlineStatus`
+
+```javascript
+import { useState, useEffect } from "react";
+
+export const useOnlineStatus = () => {
+  const [onlineStatus, setOnlineStatus] = useState(true);
+
+  useEffect(() => {
+    const handleOnline = () => setOnlineStatus(true);
+    const handleOffline = () => setOnlineStatus(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  return onlineStatus;
+};
+```
+
+### Usage Example
+
+```javascript
+import React from "react";
+import { useOnlineStatus } from "./useOnlineStatus";
+
+const OnlineStatusComponent = () => {
+  const isOnline = useOnlineStatus();
+
+  return <div>{isOnline ? "You are online!" : "You are offline!"}</div>;
+};
+```
+
+Here, the `useOnlineStatus` hook tracks whether the user is online or offline by adding event listeners for the browser’s `online` and `offline` events.
+
+## 4. Lazy Loading and Code Splitting in React
+
+**Lazy loading** and **code splitting** help optimize React applications by loading parts of the code only when they are needed, improving the overall performance and load times.
+
+### Lazy Loading Example
+
+React provides a `React.lazy()` function to dynamically import a component only when it is needed.
+
+```javascript
+import React, { Suspense } from "react";
+
+const LazyComponent = React.lazy(() => import("./LazyComponent"));
+
+const App = () => (
+  <div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <LazyComponent />
+    </Suspense>
+  </div>
+);
+
+export default App;
+```
+
+In this example, `LazyComponent` is loaded only when it’s needed. Until it is loaded, the fallback (`Loading...`) will be displayed. This reduces the initial bundle size and improves performance.
+
+### Code Splitting with `React.lazy()`
+
+Code splitting allows you to split your app into multiple bundles. With `React.lazy()`, React automatically splits the bundle so that the code for `LazyComponent` is only loaded when that component is rendered.
+
+## 5. Suspense Component and Fallback
+
+The **Suspense** component is a special wrapper that allows React to wait for certain code to load (like a lazy-loaded component) before rendering the full UI. It comes with a `fallback` prop, which is displayed while the lazy-loaded component is being fetched.
+
+### Suspense Example
+
+```javascript
+import React, { Suspense } from "react";
+
+const LazyComponent = React.lazy(() => import("./LazyComponent"));
+
+const App = () => (
+  <Suspense fallback={<div>Loading component...</div>}>
+    <LazyComponent />
+  </Suspense>
+);
+
+export default App;
+```
+
+### Benefits of Suspense
+
+- **Improves user experience**: Shows a fallback UI while loading the lazy-loaded components, so the user isn’t staring at a blank page.
+- **Optimizes performance**: Components are loaded only when needed, which reduces initial load times.
